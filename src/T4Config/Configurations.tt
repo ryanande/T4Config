@@ -12,6 +12,7 @@
     configurationFileMap.ExeConfigFilename = this.Host.ResolvePath("app.config");
     var configuration = ConfigurationManager.OpenMappedExeConfiguration(configurationFileMap, ConfigurationUserLevel.None);
 	
+	var connectionStrings = configuration.ConnectionStrings.ConnectionStrings.Count;
 #>
 
 namespace T4Config
@@ -35,5 +36,27 @@ namespace T4Config
 		}
 	<# } #>
 	}
+
+	<# if(connectionStrings > 0) { #>
+	public interface IConnectionStrings
+	{
+		<#  foreach(ConnectionStringSettings  setting in configuration.ConnectionStrings.ConnectionStrings) { #>
+		string <#= setting.Name #> { get; }
+	<# } #>
+	}
+
+	public class ConnectionStrings : IConnectionStrings
+	{
+		<#  foreach(ConnectionStringSettings setting in configuration.ConnectionStrings.ConnectionStrings) { #>
+		public string <#= setting.Name #> 
+		{
+			get 
+			{
+				return @"<#= setting.ConnectionString #>";
+			}
+		}
+	<# } #>
+	}
+	<# } #>
 }
 

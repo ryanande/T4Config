@@ -49,5 +49,21 @@ namespace T4Config
             }
         }
     }
+
+    public interface IConnectionStrings
+    {
+        string LocalSqlServer { get; }
+    }
+
+    public class ConnectionStrings : IConnectionStrings
+    {
+        public string LocalSqlServer
+        {
+            get
+            {
+                return @"data source=.\SQLEXPRESS;Integrated Security=SSPI;AttachDBFilename=|DataDirectory|aspnetdb.mdf;User Instance=true";
+            }
+        }
+    }
 }
 
