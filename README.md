@@ -41,10 +41,14 @@ After the T4 file compiled you would end up with this;
 
 Same goes for connection strings as well!
 
+##Install
+Can be install from Nuget as well;
+
+    Install-Package T4Config
+
 ## How do I do it?
 - Copy the Configurations.tt file from the src directory to your project.
 - Update the configFile value to the proper config file (web or app).
 - Right click on the file and click "Run Custom Tool".
-
 
 Enjoy!
