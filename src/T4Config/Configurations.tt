@@ -12,10 +12,9 @@
 <#@ import namespace="System.Text.RegularExpressions" #>
 
 <#   
-	var configFile = (File.Exists("app.config")) ? "app.config" : "web.config";
+	var configFile = (File.Exists(Host.ResolvePath("app.config"))) ? "app.config" : "web.config";
 
-	KeyValueConfigurationCollection settings = GetSettings(configFile);
-	
+	KeyValueConfigurationElement[] settings = GetSettings(configFile);	
 	ConnectionStringSettingsCollection connectionStrings = GetConnectionStrings(configFile);
 #>
 
@@ -66,7 +65,7 @@ namespace T4Config
 
 <#+
 
-public KeyValueConfigurationCollection GetSettings(string filePath)
+public KeyValueConfigurationElement[] GetSettings(string filePath)
 {
 	var configurationFileMap = new ExeConfigurationFileMap();
     configurationFileMap.ExeConfigFilename = this.Host.ResolvePath(filePath);
@@ -82,9 +81,7 @@ public ConnectionStringSettingsCollection GetConnectionStrings(string filePath)
     configurationFileMap.ExeConfigFilename = this.Host.ResolvePath(filePath);
     var configuration = ConfigurationManager.OpenMappedExeConfiguration(configurationFileMap, ConfigurationUserLevel.None);
 
-	return configuration.ConnectionStrings.ConnectionStrings.Cast<KeyValueConfigurationElement>()
-			.Where(x => Regex.IsMatch(x.Key, @"^[A-z][A-z0-9]+$"))
-			.ToArray();;
+	return configuration.ConnectionStrings.ConnectionStrings;
 }
 
 
