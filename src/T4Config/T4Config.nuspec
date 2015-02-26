@@ -14,6 +14,7 @@
     <tags>T4 configuration C#</tags>
   </metadata>
   <files>
-	<file src="T4Config.tt" target="lib\net40\" />
+    <file src="Configurations.tt" target="Content" />
+    <file src="install.ps1" target="tools" />
   </files>
 </package>

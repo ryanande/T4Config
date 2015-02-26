@@ -58,6 +58,7 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Configurations.cs</LastGenOutput>
     </None>
+    <None Include="install.ps1" />
     <None Include="T4Config.nuspec" />
   </ItemGroup>
   <ItemGroup>
