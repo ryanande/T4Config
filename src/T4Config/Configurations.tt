@@ -6,17 +6,18 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System" #>
 <#@ import namespace="System.IO" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
 
 <#   
-	//###############################################################
-	// UPDATE ME TO THE APP or WEB config.
-	// Assumption is that this file lives in the same directory
-	var configFile = "app.config";
-	//###############################################################
+	var configFile = (File.Exists("app.config")) ? "app.config" : "web.config";
 
 	var configurationFileMap = new ExeConfigurationFileMap();
     configurationFileMap.ExeConfigFilename = this.Host.ResolvePath(configFile);
     var configuration = ConfigurationManager.OpenMappedExeConfiguration(configurationFileMap, ConfigurationUserLevel.None);
+	var settings = configuration.AppSettings.Settings
+			.Cast<KeyValueConfigurationElement>()
+			.Where(x => Regex.IsMatch(x.Key, @"^[A-z][A-z0-9]+$"))
+			.ToArray();
 	
 	var connectionStrings = configuration.ConnectionStrings.ConnectionStrings.Count;
 #>
@@ -25,14 +26,14 @@ namespace T4Config
 {
 	public interface IConfigurations
 	{
-	<#  foreach(KeyValueConfigurationElement setting in configuration.AppSettings.Settings) { #>
+	<#  foreach(KeyValueConfigurationElement setting in settings) { #>
 		string <#= setting.Key #> { get; }
 	<# } #>
 	}
 
 	public class Configurations : IConfigurations
 	{
-		<#  foreach(KeyValueConfigurationElement setting in configuration.AppSettings.Settings) { #>
+		<#  foreach(KeyValueConfigurationElement setting in settings) { #>
 		public string <#= setting.Key #> 
 		{
 			get 
