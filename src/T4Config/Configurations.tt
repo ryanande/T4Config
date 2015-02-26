@@ -8,8 +8,14 @@
 <#@ import namespace="System.IO" #>
 
 <#   
+	//###############################################################
+	// UPDATE ME TO THE APP or WEB config.
+	// Assumption is that this file lives in the same directory
+	var configFile = "app.config";
+	//###############################################################
+
 	var configurationFileMap = new ExeConfigurationFileMap();
-    configurationFileMap.ExeConfigFilename = this.Host.ResolvePath("app.config");
+    configurationFileMap.ExeConfigFilename = this.Host.ResolvePath(configFile);
     var configuration = ConfigurationManager.OpenMappedExeConfiguration(configurationFileMap, ConfigurationUserLevel.None);
 	
 	var connectionStrings = configuration.ConnectionStrings.ConnectionStrings.Count;
