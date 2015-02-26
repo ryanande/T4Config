@@ -9,6 +9,7 @@
 <#@ import namespace="System.Text.RegularExpressions" #>
 
 <#   
+	var namespaceName = System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("NamespaceHint");
 	var configFile = (File.Exists("app.config")) ? "app.config" : "web.config";
 
 	var configurationFileMap = new ExeConfigurationFileMap();
@@ -22,7 +23,7 @@
 	var connectionStrings = configuration.ConnectionStrings.ConnectionStrings.Count;
 #>
 
-namespace T4Config
+namespace <#= namespaceName #>
 {
 	public interface IConfigurations
 	{
