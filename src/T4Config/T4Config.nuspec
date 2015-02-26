@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>T4Config</id>
+    <version>$version$</version>
+    <title>T4Config</title>
+    <authors>Ryan Anderson</authors>
+    <owners>Ryan Anderson</owners>
+    <licenseUrl>https://github.com/ryanande/T4Config/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/ryanande/T4Config</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>T4Config is a text template which creates classes and interfaces for AppSetting and ConnectionString key value pair values to be strongly typed.</description>
+    <releaseNotes></releaseNotes>
+    <tags>T4 configuration C#</tags>
+  </metadata>
+  <files>
+	<file src="T4Config.tt" target="lib\net40\" />
+  </files>
+</package>
