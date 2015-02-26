@@ -11,7 +11,8 @@
 <#@ import namespace="System.IO" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
 <#   
-	var configFile = (File.Exists(Host.ResolvePath("app.config"))) ? "app.config" : "web.config";
+	var namespaceName = System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("NamespaceHint");
+	var configFile = (File.Exists("app.config")) ? "app.config" : "web.config";
 
 	KeyValueConfigurationElement[] settings = GetSettings(configFile);	
 	ConnectionStringSettingsCollection connectionStrings = GetConnectionStrings(configFile);
@@ -19,7 +20,7 @@
 using System;
 using System.Configuration;
 
-namespace T4Config
+namespace <#= namespaceName #>
 {
 	public interface IConfigurations
 	{
