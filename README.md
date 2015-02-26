@@ -1,43 +1,52 @@
 # T4Config
 
-A down and dirty way to have strongly typed App Settings and Connection Strings using T4.
+A down and dirty way to have strongly typed Config Settings and Connection Strings using in your projects by using T4.
 
 In a nutshell we create an interface called IConfigurations/ IConnectionStrings, so you can do all your fancy DI/IoC stuff, and a concrete implementation called Configurations/ ConnectionStrings. (both names totally customizable.
 
-The T4 template loops through the web.config or app.config appSettings and generates a read only property for each key and returns the values placed in the settings value.
+The T4 template loops through the web.config (or app.config) appSettings and generates a read only property for each key and returns the values placed in the settings value.
 
 If you have a configuration section of appSettings which looked like this;
 
     <appSettings>
     	<add key="Key1" value="value1" />
-    	<add key="Key2" value="value2" />
+    	<add key="Key2" value="2212DE83-DFC3-44A8-81BA-0A8D132C1F79" />
+    	<add key="Key3" value="42" />
 	</appSettings>
 
-After the T4 file compiled you would end up with this;
+After the T4 file compiles you would end up with this;
 
     public interface IConfigurations
-    {
-        string Key1 { get; }
-        string Key2 { get; }
-    }
+	{
+		string Key1 { get; }
+		Guid Key2 { get; }
+		int Key3 { get; }
+	}
 
-    public class Configurations : IConfigurations
-    {
-        public string Key1
-        {
-            get
-            {
-                return "value1";
-            }
-        }
-        public string Key2
-        {
-            get
-            {
-                return "value2";
-            }
-        }
-    }
+	public class Configurations : IConfigurations
+	{
+		public virtual string Key1 
+		{
+			get 
+			{
+				return ConfigurationManager.AppSettings["Key1"];
+			}
+		}
+		public virtual Guid Key2 
+		{
+			get 
+			{
+				return new Guid(ConfigurationManager.AppSettings["Key2"]);
+			}
+		}
+		public virtual int Key3 
+		{
+			get 
+			{
+				return Convert.ToInt32(ConfigurationManager.AppSettings["Key3"]);
+			}
+		}
+	}
 
 Same goes for connection strings as well!
 
