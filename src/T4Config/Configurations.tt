@@ -2,6 +2,9 @@
 <#@ output extension=".cs" #>
 <#@ assembly name="System.Configuration" #>
 <#@ assembly name="System.Core" #>
+<#@ assembly name="System.Linq" #>
+<#@ assembly name="System" #>
+<#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Configuration" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System" #>
@@ -11,15 +14,9 @@
 <#   
 	var configFile = (File.Exists("app.config")) ? "app.config" : "web.config";
 
-	var configurationFileMap = new ExeConfigurationFileMap();
-    configurationFileMap.ExeConfigFilename = this.Host.ResolvePath(configFile);
-    var configuration = ConfigurationManager.OpenMappedExeConfiguration(configurationFileMap, ConfigurationUserLevel.None);
-	var settings = configuration.AppSettings.Settings
-			.Cast<KeyValueConfigurationElement>()
-			.Where(x => Regex.IsMatch(x.Key, @"^[A-z][A-z0-9]+$"))
-			.ToArray();
+	KeyValueConfigurationCollection settings = GetSettings(configFile);
 	
-	var connectionStrings = configuration.ConnectionStrings.ConnectionStrings.Count;
+	ConnectionStringSettingsCollection connectionStrings = GetConnectionStrings(configFile);
 #>
 
 namespace T4Config
@@ -27,7 +24,7 @@ namespace T4Config
 	public interface IConfigurations
 	{
 	<#  foreach(KeyValueConfigurationElement setting in settings) { #>
-		string <#= setting.Key #> { get; }
+		 string <#= setting.Key #> { get; }
 	<# } #>
 	}
 
@@ -44,17 +41,17 @@ namespace T4Config
 	<# } #>
 	}
 
-	<# if(connectionStrings > 0) { #>
+	<# if(connectionStrings.Count > 0) { #>
 	public interface IConnectionStrings
 	{
-		<#  foreach(ConnectionStringSettings  setting in configuration.ConnectionStrings.ConnectionStrings) { #>
+		<#  foreach(ConnectionStringSettings  setting in connectionStrings) { #>
 		string <#= setting.Name #> { get; }
 	<# } #>
 	}
 
 	public class ConnectionStrings : IConnectionStrings
 	{
-		<#  foreach(ConnectionStringSettings setting in configuration.ConnectionStrings.ConnectionStrings) { #>
+		<#  foreach(ConnectionStringSettings setting in connectionStrings) { #>
 		public string <#= setting.Name #> 
 		{
 			get 
@@ -67,3 +64,31 @@ namespace T4Config
 	<# } #>
 }
 
+<#+
+
+public KeyValueConfigurationCollection GetSettings(string filePath)
+{
+	var configurationFileMap = new ExeConfigurationFileMap();
+    configurationFileMap.ExeConfigFilename = this.Host.ResolvePath(filePath);
+    var configuration = ConfigurationManager.OpenMappedExeConfiguration(configurationFileMap, ConfigurationUserLevel.None);
+
+	return configuration.AppSettings.Settings.Cast<KeyValueConfigurationElement>()
+			.Where(x => Regex.IsMatch(x.Key, @"^[A-z][A-z0-9]+$"))
+			.ToArray();;
+}
+public ConnectionStringSettingsCollection GetConnectionStrings(string filePath)
+{
+	var configurationFileMap = new ExeConfigurationFileMap();
+    configurationFileMap.ExeConfigFilename = this.Host.ResolvePath(filePath);
+    var configuration = ConfigurationManager.OpenMappedExeConfiguration(configurationFileMap, ConfigurationUserLevel.None);
+
+	return configuration.ConnectionStrings.ConnectionStrings.Cast<KeyValueConfigurationElement>()
+			.Where(x => Regex.IsMatch(x.Key, @"^[A-z][A-z0-9]+$"))
+			.ToArray();;
+}
+
+
+
+
+
+#>
