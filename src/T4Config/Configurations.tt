@@ -23,42 +23,42 @@ namespace T4Config
 {
 	public interface IConfigurations
 	{
-	<#  foreach(KeyValueConfigurationElement setting in settings) { #>
-		 <#= GetTypeString(setting.Value) #> <#= setting.Key #> { get; }
-	<# } #>
+<#  foreach(KeyValueConfigurationElement setting in settings) { #>
+		<#= GetTypeString(setting.Value) #> <#= setting.Key #> { get; }
+<# } #>
 	}
 
 	public class Configurations : IConfigurations
 	{
-		<#  foreach(KeyValueConfigurationElement setting in settings) { #>
-		<# var type = GetTypeString(setting.Value); #>
+<#  foreach(KeyValueConfigurationElement setting in settings) { #>
+<# var type = GetTypeString(setting.Value); #>
 		public <#= type #> <#= setting.Key #> 
 		{
 			get 
 			{
-				<# if(type == "Guid") { #>
-					return new Guid(ConfigurationManager.AppSettings["<#= setting.Key #>"]);
-				<# } else if(type == "int") { #>
-					return Convert.ToInt32(ConfigurationManager.AppSettings["<#= setting.Key #>"]);
-				<# } else { #>
-					return ConfigurationManager.AppSettings["<#= setting.Key #>"];
-				<# } #>
+<# if(type == "Guid") { #>
+				return new Guid(ConfigurationManager.AppSettings["<#= setting.Key #>"]);
+<# } else if(type == "int") { #>
+				return Convert.ToInt32(ConfigurationManager.AppSettings["<#= setting.Key #>"]);
+<# } else { #>
+				return ConfigurationManager.AppSettings["<#= setting.Key #>"];
+<# } #>
 			}
 		}
-	<# } #>
+<# } #>
 	}
 
-	<# if(connectionStrings.Count > 0) { #>
+<# if(connectionStrings.Count > 0) { #>
 	public interface IConnectionStrings
 	{
-		<#  foreach(ConnectionStringSettings  setting in connectionStrings) { #>
+<#  foreach(ConnectionStringSettings  setting in connectionStrings) { #>
 		string <#= setting.Name #> { get; }
-	<# } #>
+<# } #>
 	}
 
 	public class ConnectionStrings : IConnectionStrings
 	{
-		<#  foreach(ConnectionStringSettings setting in connectionStrings) { #>
+<#  foreach(ConnectionStringSettings setting in connectionStrings) { #>
 		public string <#= setting.Name #> 
 		{
 			get 
@@ -66,9 +66,9 @@ namespace T4Config
 				return ConfigurationManager.ConnectionStrings["<#= setting.Name #>"].ConnectionString;
 			}
 		}
-	<# } #>
+<# } #>
 	}
-	<# } #>
+<# } #>
 }
 
 <#+
