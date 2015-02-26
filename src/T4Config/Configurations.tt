@@ -16,23 +16,33 @@
 	KeyValueConfigurationElement[] settings = GetSettings(configFile);	
 	ConnectionStringSettingsCollection connectionStrings = GetConnectionStrings(configFile);
 #>
+using System;
+using System.Configuration;
+
 namespace T4Config
 {
 	public interface IConfigurations
 	{
 	<#  foreach(KeyValueConfigurationElement setting in settings) { #>
-		 string <#= setting.Key #> { get; }
+		 <#= GetTypeString(setting.Value) #> <#= setting.Key #> { get; }
 	<# } #>
 	}
 
 	public class Configurations : IConfigurations
 	{
 		<#  foreach(KeyValueConfigurationElement setting in settings) { #>
-		public string <#= setting.Key #> 
+		<# var type = GetTypeString(setting.Value); #>
+		public <#= type #> <#= setting.Key #> 
 		{
 			get 
 			{
-				return "<#= setting.Value #>";
+				<# if(type == "Guid") { #>
+					return new Guid(ConfigurationManager.AppSettings["<#= setting.Key #>"]);
+				<# } else if(type == "int") { #>
+					return Convert.ToInt32(ConfigurationManager.AppSettings["<#= setting.Key #>"]);
+				<# } else { #>
+					return ConfigurationManager.AppSettings["<#= setting.Key #>"];
+				<# } #>
 			}
 		}
 	<# } #>
@@ -53,7 +63,7 @@ namespace T4Config
 		{
 			get 
 			{
-				return @"<#= setting.ConnectionString #>";
+				return ConfigurationManager.ConnectionStrings["<#= setting.Name #>"].ConnectionString;
 			}
 		}
 	<# } #>
@@ -67,7 +77,7 @@ public KeyValueConfigurationElement[] GetSettings(string filePath)
 {
 	return GetConfiguration(filePath).AppSettings.Settings.Cast<KeyValueConfigurationElement>()
 			.Where(x => Regex.IsMatch(x.Key, @"^[A-z][A-z0-9]+$"))
-			.ToArray();;
+			.ToArray(); 
 }
 
 public ConnectionStringSettingsCollection GetConnectionStrings(string filePath)
@@ -80,6 +90,25 @@ public Configuration GetConfiguration(string filePath)
 	var configurationFileMap = new ExeConfigurationFileMap();
     configurationFileMap.ExeConfigFilename = this.Host.ResolvePath(filePath);
     return ConfigurationManager.OpenMappedExeConfiguration(configurationFileMap, ConfigurationUserLevel.None);
+}
+
+public string GetTypeString(object value)
+{
+
+	Guid guid;
+	if( Guid.TryParse(value.ToString(), out guid))
+    {
+		return "Guid";
+    }
+
+	int i;
+	if(int.TryParse(value.ToString(), out i))
+	{
+		return "int";
+    }
+
+	return "string";
+
 }
 
 #>
