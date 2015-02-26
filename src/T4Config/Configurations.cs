@@ -1,6 +1,4 @@
-﻿
-
-namespace T4Config
+﻿namespace T4Config
 {
 	public interface IConfigurations
 	{
