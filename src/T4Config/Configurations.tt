@@ -32,7 +32,7 @@ namespace T4Config
 	{
 <#  foreach(KeyValueConfigurationElement setting in settings) { #>
 <# var type = GetTypeString(setting.Value); #>
-		public <#= type #> <#= setting.Key #> 
+		public virtual <#= type #> <#= setting.Key #> 
 		{
 			get 
 			{
@@ -59,7 +59,7 @@ namespace T4Config
 	public class ConnectionStrings : IConnectionStrings
 	{
 <#  foreach(ConnectionStringSettings setting in connectionStrings) { #>
-		public string <#= setting.Name #> 
+		public virtual string <#= setting.Name #> 
 		{
 			get 
 			{

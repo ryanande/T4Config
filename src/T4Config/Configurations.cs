@@ -12,21 +12,21 @@ namespace T4Config
 
 	public class Configurations : IConfigurations
 	{
-		public string Key1 
+		public virtual string Key1 
 		{
 			get 
 			{
 				return ConfigurationManager.AppSettings["Key1"];
 			}
 		}
-		public Guid Key2 
+		public virtual Guid Key2 
 		{
 			get 
 			{
 				return new Guid(ConfigurationManager.AppSettings["Key2"]);
 			}
 		}
-		public int Key3 
+		public virtual int Key3 
 		{
 			get 
 			{
@@ -42,7 +42,7 @@ namespace T4Config
 
 	public class ConnectionStrings : IConnectionStrings
 	{
-		public string LocalSqlServer 
+		public virtual string LocalSqlServer 
 		{
 			get 
 			{
