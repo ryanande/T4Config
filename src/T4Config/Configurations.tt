@@ -4,6 +4,7 @@
 <#@ assembly name="System.Core" #>
 <#@ assembly name="System.Linq" #>
 <#@ assembly name="System" #>
+<#@ Assembly Name="EnvDTE" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Configuration" #>
 <#@ import namespace="System.Linq" #>
@@ -11,11 +12,15 @@
 <#@ import namespace="System.IO" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
 <#   
-	var namespaceName = System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("NamespaceHint");
-	var configFile = (File.Exists(Host.ResolvePath("app.config"))) ? "app.config" : "web.config";
+	if (string.IsNullOrEmpty(GetConfigPath())) 
+	{
+		return String.Empty; 
+    }
 
-	KeyValueConfigurationElement[] settings = GetSettings(configFile);	
-	ConnectionStringSettingsCollection connectionStrings = GetConnectionStrings(configFile);
+	var namespaceName = System.Runtime.Remoting.Messaging.CallContext.LogicalGetData("NamespaceHint");
+
+	KeyValueConfigurationElement[] settings = GetSettings();	
+	ConnectionStringSettingsCollection connectionStrings = GetConnectionStrings();
 #>
 using System;
 using System.Configuration;
@@ -74,28 +79,33 @@ namespace <#= namespaceName #>
 
 <#+
 
-public KeyValueConfigurationElement[] GetSettings(string filePath)
+public KeyValueConfigurationElement[] GetSettings()
 {
-	return GetConfiguration(filePath).AppSettings.Settings.Cast<KeyValueConfigurationElement>()
+	return GetConfiguration().AppSettings.Settings.Cast<KeyValueConfigurationElement>()
 			.Where(x => Regex.IsMatch(x.Key, @"^[A-z][A-z0-9]+$"))
 			.ToArray(); 
 }
 
-public ConnectionStringSettingsCollection GetConnectionStrings(string filePath)
+public ConnectionStringSettingsCollection GetConnectionStrings()
 {
-	return GetConfiguration(filePath).ConnectionStrings.ConnectionStrings;
+	return GetConfiguration().ConnectionStrings.ConnectionStrings;
 }
 
-public Configuration GetConfiguration(string filePath)
+public Configuration GetConfiguration()
 {
-	var configurationFileMap = new ExeConfigurationFileMap();
-    configurationFileMap.ExeConfigFilename = this.Host.ResolvePath(filePath);
-    return ConfigurationManager.OpenMappedExeConfiguration(configurationFileMap, ConfigurationUserLevel.None);
+
+	ExeConfigurationFileMap configFile = new ExeConfigurationFileMap(); 
+	configFile.ExeConfigFilename = GetConfigPath(); 
+	if (string.IsNullOrEmpty(configFile.ExeConfigFilename)) 
+		throw new ArgumentNullException("The project does not contain App.config or Web.config file."); 
+	
+	return ConfigurationManager.OpenMappedExeConfiguration(configFile, ConfigurationUserLevel.None);
+
+	
 }
 
 public string GetTypeString(object value)
 {
-
 	Guid guid;
 	if( Guid.TryParse(value.ToString(), out guid))
     {
@@ -109,7 +119,56 @@ public string GetTypeString(object value)
     }
 
 	return "string";
+}
 
+public EnvDTE.Project GetCurrentProject()
+{
+    IServiceProvider serviceProvider = (IServiceProvider)Host;
+    if (serviceProvider == null)
+    {
+		throw new Exception("Host property returned unexpected value (null)");
+    }
+
+    EnvDTE.DTE dte = (EnvDTE.DTE)serviceProvider.GetService(typeof(EnvDTE.DTE));
+    if (dte == null)
+    {
+		throw new Exception("Unable to retrieve EnvDTE.DTE");
+    }
+
+    Array activeSolutionProjects = (Array)dte.ActiveSolutionProjects;
+    if (activeSolutionProjects == null)
+    {
+		throw new Exception("DTE.ActiveSolutionProjects returned null");
+    }
+
+    EnvDTE.Project project = (EnvDTE.Project)activeSolutionProjects.GetValue(0);
+    if (project == null)
+    {
+		throw new Exception("DTE.ActiveSolutionProjects[0] returned null");
+    }
+
+    return project;
+}
+
+
+private string GetProjectPath()
+{
+    EnvDTE.Project project = GetCurrentProject();
+    System.IO.FileInfo fileInfo = new System.IO.FileInfo(project.FullName);
+    return fileInfo.Directory.FullName;
+}
+
+private string GetConfigPath()
+{
+    EnvDTE.Project project = GetCurrentProject();
+    foreach (EnvDTE.ProjectItem projectItem in project.ProjectItems)
+    {
+        if (projectItem.Name.Equals("App.config", StringComparison.InvariantCultureIgnoreCase) || projectItem.Name.Equals("Web.config", StringComparison.InvariantCultureIgnoreCase))
+		{
+			return GetProjectPath() + "\\" + projectItem.Name;
+        }
+    }
+    return string.Empty;
 }
 
 #>
