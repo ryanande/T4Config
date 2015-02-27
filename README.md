@@ -8,45 +8,49 @@ The T4 template loops through the web.config (or app.config) appSettings and gen
 
 If you have a configuration section of appSettings which looked like this;
 
-    <appSettings>
-    	<add key="Key1" value="value1" />
-    	<add key="Key2" value="2212DE83-DFC3-44A8-81BA-0A8D132C1F79" />
-    	<add key="Key3" value="42" />
-	</appSettings>
+```xml
+<appSettings>
+    <add key="Key1" value="value1" />
+    <add key="Key2" value="2212DE83-DFC3-44A8-81BA-0A8D132C1F79" />
+    <add key="Key3" value="42" />
+</appSettings>
+```
 
 After the T4 file compiles you would end up with this;
 
-    public interface IConfigurations
-	{
-		string Key1 { get; }
-		Guid Key2 { get; }
-		int Key3 { get; }
-	}
+```csharp
+public interface IConfigurations
+{
+    string Key1 { get; }
+    Guid Key2 { get; }
+    int Key3 { get; }
+}
 
-	public class Configurations : IConfigurations
-	{
-		public virtual string Key1 
-		{
-			get 
-			{
-				return ConfigurationManager.AppSettings["Key1"];
-			}
-		}
-		public virtual Guid Key2 
-		{
-			get 
-			{
-				return new Guid(ConfigurationManager.AppSettings["Key2"]);
-			}
-		}
-		public virtual int Key3 
-		{
-			get 
-			{
-				return Convert.ToInt32(ConfigurationManager.AppSettings["Key3"]);
-			}
-		}
-	}
+public class Configurations : IConfigurations
+{
+    public virtual string Key1 
+    {
+        get 
+        {
+            return ConfigurationManager.AppSettings["Key1"];
+        }
+    }
+    public virtual Guid Key2 
+    {
+        get 
+        {
+            return new Guid(ConfigurationManager.AppSettings["Key2"]);
+        }
+    }
+    public virtual int Key3 
+    {
+        get 
+        {
+            return Convert.ToInt32(ConfigurationManager.AppSettings["Key3"]);
+        }
+    }
+}
+```
 
 Same goes for connection strings as well!
 
