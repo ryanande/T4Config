@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>T4config by ryanande</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>T4config</h1>
+        <h2>Strongly Typed, Auto-generated!</h2>
+        <a href="https://github.com/ryanande/T4Config" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="t4config" class="anchor" href="#t4config" aria-hidden="true"><span class="octicon octicon-link"></span></a>T4Config</h1>
+
+<p>A down and dirty way to have strongly typed Config Settings and Connection Strings using in your projects by using T4.</p>
+
+<p>In a nutshell we create an interface called IConfigurations/ IConnectionStrings, so you can do all your fancy DI/IoC stuff, and a concrete implementation called Configurations/ ConnectionStrings. (both names totally customizable.</p>
+
+<p>The T4 template loops through the web.config (or app.config) appSettings and generates a read only property for each key and returns the values placed in the settings value.</p>
+
+<p>If you have a configuration section of appSettings which looked like this;</p>
+
+<div class="highlight highlight-xml"><pre>&lt;<span class="pl-ent">appSettings</span>&gt;
+    &lt;<span class="pl-ent">add</span> <span class="pl-e">key</span>=<span class="pl-s1"><span class="pl-pds">"</span>Key1<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s1"><span class="pl-pds">"</span>value1<span class="pl-pds">"</span></span> /&gt;
+    &lt;<span class="pl-ent">add</span> <span class="pl-e">key</span>=<span class="pl-s1"><span class="pl-pds">"</span>Key2<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s1"><span class="pl-pds">"</span>2212DE83-DFC3-44A8-81BA-0A8D132C1F79<span class="pl-pds">"</span></span> /&gt;
+    &lt;<span class="pl-ent">add</span> <span class="pl-e">key</span>=<span class="pl-s1"><span class="pl-pds">"</span>Key3<span class="pl-pds">"</span></span> <span class="pl-e">value</span>=<span class="pl-s1"><span class="pl-pds">"</span>42<span class="pl-pds">"</span></span> /&gt;
+&lt;/<span class="pl-ent">appSettings</span>&gt;</pre></div>
+
+<p>After the T4 file compiles you would end up with this;</p>
+
+<div class="highlight highlight-csharp"><pre><span class="pl-s">public</span> <span class="pl-s">interface</span> <span class="pl-en">IConfigurations</span>
+{
+    <span class="pl-st">string</span> <span class="pl-en">Key1</span> { <span class="pl-k">get</span>; }
+    Guid <span class="pl-en">Key2</span> { <span class="pl-k">get</span>; }
+    <span class="pl-st">int</span> <span class="pl-en">Key3</span> { <span class="pl-k">get</span>; }
+}
+
+<span class="pl-s">public</span> <span class="pl-s">class</span> <span class="pl-en">Configurations</span> : <span class="pl-st">IConfigurations</span>
+{
+    <span class="pl-s">public</span> <span class="pl-s">virtual</span> <span class="pl-st">string</span> Key1 
+    {
+        <span class="pl-k">get</span> 
+        {
+            <span class="pl-k">return</span> ConfigurationManager.AppSettings[<span class="pl-s1"><span class="pl-pds">"</span>Key1<span class="pl-pds">"</span></span>];
+        }
+    }
+    <span class="pl-s">public</span> <span class="pl-s">virtual</span> Guid Key2 
+    {
+        <span class="pl-k">get</span> 
+        {
+            <span class="pl-k">return</span> <span class="pl-s">new</span> Guid(ConfigurationManager.AppSettings[<span class="pl-s1"><span class="pl-pds">"</span>Key2<span class="pl-pds">"</span></span>]);
+        }
+    }
+    <span class="pl-s">public</span> <span class="pl-s">virtual</span> <span class="pl-st">int</span> Key3 
+    {
+        <span class="pl-k">get</span> 
+        {
+            <span class="pl-k">return</span> Convert.ToInt32(ConfigurationManager.AppSettings[<span class="pl-s1"><span class="pl-pds">"</span>Key3<span class="pl-pds">"</span></span>]);
+        }
+    }
+}</pre></div>
+
+<p>Same goes for connection strings as well!</p>
+
+<h2>
+<a id="install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install</h2>
+
+<p>Can be install from Nuget as well;</p>
+
+<pre><code>Install-Package T4Config
+</code></pre>
+
+<h2>
+<a id="how-do-i-do-it" class="anchor" href="#how-do-i-do-it" aria-hidden="true"><span class="octicon octicon-link"></span></a>How do I do it?</h2>
+
+<ul>
+<li>Copy the Configurations.tt file from the src directory to your project.</li>
+<li>Update the configFile value to the proper config file (web or app).</li>
+<li>Right click on the file and click "Run Custom Tool".</li>
+</ul>
+
+<p>Enjoy!</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/ryanande/T4Config/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/ryanande/T4Config/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/ryanande/T4Config"></a> is maintained by <a href="https://github.com/ryanande">ryanande</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
