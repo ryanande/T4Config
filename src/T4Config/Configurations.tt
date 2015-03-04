@@ -41,7 +41,7 @@ namespace <#= namespaceName #>
 	var type = GetTypeString(setting.Value);
 	var lazyType = string.Concat("Lazy<", type, ">");
 #>
-		private static readonly <#= lazyType #> _<#= Hungarian(setting.Key) #> = new <#= lazyType #>(() => 
+		private static readonly <#= lazyType #> _<#= LowerFirst(setting.Key) #> = new <#= lazyType #>(() => 
 	<# if(type == "Guid") { #>
 			 new Guid(ConfigurationManager.AppSettings["<#= setting.Key #>"])
 	<# } else if(type == "int") { #>
@@ -57,7 +57,7 @@ namespace <#= namespaceName #>
 		{
 			get 
 			{
-				return _<#= Hungarian(setting.Key) #>.Value;
+				return _<#= LowerFirst(setting.Key) #>.Value;
 			}
 		}
 <# } #>
@@ -74,7 +74,7 @@ namespace <#= namespaceName #>
 	public class ConnectionStrings : IConnectionStrings
 	{
 <#  foreach(ConnectionStringSettings setting in connectionStrings) { #>
-		private static readonly Lazy<string> _<#= Hungarian(setting.Name) #> = new Lazy<string>(() => ConfigurationManager.ConnectionStrings["<#= setting.Name #>"].ConnectionString);
+		private static readonly Lazy<string> _<#= LowerFirst(setting.Name) #> = new Lazy<string>(() => ConfigurationManager.ConnectionStrings["<#= setting.Name #>"].ConnectionString);
 <# } #>
 
 <#  foreach(ConnectionStringSettings setting in connectionStrings) { #>
@@ -82,7 +82,7 @@ namespace <#= namespaceName #>
 		{
 			get 
 			{
-				return _<#= Hungarian(setting.Name) #>.Value;
+				return _<#= LowerFirst(setting.Name) #>.Value;
 			}
 		}
 <# } #>
@@ -184,7 +184,7 @@ private string GetConfigPath()
     return string.Empty;
 }
 
-public string Hungarian(string text)
+public string LowerFirst(string text)
 {
 	return char.ToLower(text[0]) + text.Substring(1);
 }
