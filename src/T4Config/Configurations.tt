@@ -37,18 +37,25 @@ namespace <#= namespaceName #>
 	public class Configurations : IConfigurations
 	{
 <#  foreach(KeyValueConfigurationElement setting in settings) { #>
-<# var type = GetTypeString(setting.Value); #>
+<#
+	var type = GetTypeString(setting.Value);
+	var lazyType = string.Concat("Lazy<", type, ">");
+#>
+		private static readonly <#= lazyType #> _<#= setting.Key #> = new <#= lazyType #>(() => {
+	<# if(type == "Guid") { #>
+				return new Guid(ConfigurationManager.AppSettings["<#= setting.Key #>"]);
+	<# } else if(type == "int") { #>
+				return Convert.ToInt32(ConfigurationManager.AppSettings["<#= setting.Key #>"]);
+	<# } else { #>
+				return ConfigurationManager.AppSettings["<#= setting.Key #>"];
+	<# } #>
+	});
+
 		public virtual <#= type #> <#= setting.Key #> 
 		{
 			get 
 			{
-<# if(type == "Guid") { #>
-				return new Guid(ConfigurationManager.AppSettings["<#= setting.Key #>"]);
-<# } else if(type == "int") { #>
-				return Convert.ToInt32(ConfigurationManager.AppSettings["<#= setting.Key #>"]);
-<# } else { #>
-				return ConfigurationManager.AppSettings["<#= setting.Key #>"];
-<# } #>
+				return _<#= setting.Key #>.Value;
 			}
 		}
 <# } #>
@@ -65,11 +72,12 @@ namespace <#= namespaceName #>
 	public class ConnectionStrings : IConnectionStrings
 	{
 <#  foreach(ConnectionStringSettings setting in connectionStrings) { #>
+		private static readonly Lazy<string> _<#= setting.Name #> = new Lazy<string>(() => ConfigurationManager.ConnectionStrings["<#= setting.Name #>"].ConnectionString);
 		public virtual string <#= setting.Name #> 
 		{
 			get 
 			{
-				return ConfigurationManager.ConnectionStrings["<#= setting.Name #>"].ConnectionString;
+				return _<#= setting.Name #>.Value;
 			}
 		}
 <# } #>
