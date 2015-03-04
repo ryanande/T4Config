@@ -41,15 +41,14 @@ namespace <#= namespaceName #>
 	var type = GetTypeString(setting.Value);
 	var lazyType = string.Concat("Lazy<", type, ">");
 #>
-		private static readonly <#= lazyType #> _<#= setting.Key #> = new <#= lazyType #>(() => {
+		private static readonly <#= lazyType #> _<#= Hungarian(setting.Key) #> = new <#= lazyType #>(() => 
 	<# if(type == "Guid") { #>
-			return new Guid(ConfigurationManager.AppSettings["<#= setting.Key #>"]);
+			 new Guid(ConfigurationManager.AppSettings["<#= setting.Key #>"])
 	<# } else if(type == "int") { #>
-			return Convert.ToInt32(ConfigurationManager.AppSettings["<#= setting.Key #>"]);
+			 Convert.ToInt32(ConfigurationManager.AppSettings["<#= setting.Key #>"])
 	<# } else { #>
-			return ConfigurationManager.AppSettings["<#= setting.Key #>"];
-	<# } #>
-	});
+			 ConfigurationManager.AppSettings["<#= setting.Key #>"]
+	<# } #>);
 <# } #>
 
 <#  foreach(KeyValueConfigurationElement setting in settings) { #>
@@ -58,7 +57,7 @@ namespace <#= namespaceName #>
 		{
 			get 
 			{
-				return _<#= setting.Key #>.Value;
+				return _<#= Hungarian(setting.Key) #>.Value;
 			}
 		}
 <# } #>
@@ -75,7 +74,7 @@ namespace <#= namespaceName #>
 	public class ConnectionStrings : IConnectionStrings
 	{
 <#  foreach(ConnectionStringSettings setting in connectionStrings) { #>
-		private static readonly Lazy<string> _<#= setting.Name #> = new Lazy<string>(() => ConfigurationManager.ConnectionStrings["<#= setting.Name #>"].ConnectionString);
+		private static readonly Lazy<string> _<#= Hungarian(setting.Name) #> = new Lazy<string>(() => ConfigurationManager.ConnectionStrings["<#= setting.Name #>"].ConnectionString);
 <# } #>
 
 <#  foreach(ConnectionStringSettings setting in connectionStrings) { #>
@@ -83,7 +82,7 @@ namespace <#= namespaceName #>
 		{
 			get 
 			{
-				return _<#= setting.Name #>.Value;
+				return _<#= Hungarian(setting.Name) #>.Value;
 			}
 		}
 <# } #>
@@ -183,6 +182,11 @@ private string GetConfigPath()
         }
     }
     return string.Empty;
+}
+
+public string Hungarian(string text)
+{
+	return char.ToLower(text[0]) + text.Substring(1);
 }
 
 #>
