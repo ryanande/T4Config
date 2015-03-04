@@ -173,7 +173,7 @@ private string GetConfigPath()
     {
         if (projectItem.Name.Equals("App.config", StringComparison.InvariantCultureIgnoreCase) || projectItem.Name.Equals("Web.config", StringComparison.InvariantCultureIgnoreCase))
 		{
-			return GetProjectPath() + "\\" + projectItem.Name;
+			return System.IO.Path.Combine(GetProjectPath(), projectItem.Name);
         }
     }
     return string.Empty;
