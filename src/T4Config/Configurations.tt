@@ -43,14 +43,17 @@ namespace <#= namespaceName #>
 #>
 		private static readonly <#= lazyType #> _<#= setting.Key #> = new <#= lazyType #>(() => {
 	<# if(type == "Guid") { #>
-				return new Guid(ConfigurationManager.AppSettings["<#= setting.Key #>"]);
+			return new Guid(ConfigurationManager.AppSettings["<#= setting.Key #>"]);
 	<# } else if(type == "int") { #>
-				return Convert.ToInt32(ConfigurationManager.AppSettings["<#= setting.Key #>"]);
+			return Convert.ToInt32(ConfigurationManager.AppSettings["<#= setting.Key #>"]);
 	<# } else { #>
-				return ConfigurationManager.AppSettings["<#= setting.Key #>"];
+			return ConfigurationManager.AppSettings["<#= setting.Key #>"];
 	<# } #>
 	});
+<# } #>
 
+<#  foreach(KeyValueConfigurationElement setting in settings) { #>
+<#  var type = GetTypeString(setting.Value); #>
 		public virtual <#= type #> <#= setting.Key #> 
 		{
 			get 
@@ -73,6 +76,9 @@ namespace <#= namespaceName #>
 	{
 <#  foreach(ConnectionStringSettings setting in connectionStrings) { #>
 		private static readonly Lazy<string> _<#= setting.Name #> = new Lazy<string>(() => ConfigurationManager.ConnectionStrings["<#= setting.Name #>"].ConnectionString);
+<# } #>
+
+<#  foreach(ConnectionStringSettings setting in connectionStrings) { #>
 		public virtual string <#= setting.Name #> 
 		{
 			get 
