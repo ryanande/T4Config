@@ -28,15 +28,9 @@ public interface IConfigurations
 
 public class Configurations : IConfigurations
 {
-	private static readonly Lazy<string> _key1 = new Lazy<string>(() => 
-			 ConfigurationManager.AppSettings["Key1"]
-);
-	private static readonly Lazy<Guid> _key2 = new Lazy<Guid>(() => 
-			 new Guid(ConfigurationManager.AppSettings["Key2"])
-);
-	private static readonly Lazy<int> _key3 = new Lazy<int>(() => 
-			 Convert.ToInt32(ConfigurationManager.AppSettings["Key3"])
-);
+	private static readonly Lazy<string> _key1 = new Lazy<string>(() => ConfigurationManager.AppSettings["Key1"]);
+	private static readonly Lazy<Guid> _key2 = new Lazy<Guid>(() => new Guid(ConfigurationManager.AppSettings["Key2"]));
+	private static readonly Lazy<int> _key3 = new Lazy<int>(() => Convert.ToInt32(ConfigurationManager.AppSettings["Key3"]));
 
 	public virtual string Key1 
 	{
