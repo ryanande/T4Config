@@ -81,6 +81,8 @@ Can be install from Nuget as well;
 
     Install-Package T4Config
 
+https://www.nuget.org/packages/T4Config/
+
 ## How do I do it?
 - Copy the Configurations.tt file from the src directory to your project.
 - Update the configFile value to the proper config file (web or app).
