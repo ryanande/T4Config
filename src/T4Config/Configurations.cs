@@ -8,6 +8,7 @@ namespace T4Config
 		string Key1 { get; }
 		Guid Key2 { get; }
 		int Key3 { get; }
+		bool Key4 { get; }
 	}
 
 	public class Configurations : IConfigurations
@@ -20,6 +21,9 @@ namespace T4Config
 	);
 		private static readonly Lazy<int> _key3 = new Lazy<int>(() => 
 				 Convert.ToInt32(ConfigurationManager.AppSettings["Key3"])
+	);
+		private static readonly Lazy<bool> _key4 = new Lazy<bool>(() => 
+				 Convert.ToBoolean(ConfigurationManager.AppSettings["Key4"])
 	);
 
 		public virtual string Key1 
@@ -41,6 +45,13 @@ namespace T4Config
 			get 
 			{
 				return _key3.Value;
+			}
+		}
+		public virtual bool Key4 
+		{
+			get 
+			{
+				return _key4.Value;
 			}
 		}
 	}

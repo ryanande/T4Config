@@ -46,6 +46,8 @@ namespace <#= namespaceName #>
 			 new Guid(ConfigurationManager.AppSettings["<#= setting.Key #>"])
 	<# } else if(type == "int") { #>
 			 Convert.ToInt32(ConfigurationManager.AppSettings["<#= setting.Key #>"])
+	<# } else if(type == "bool") { #>
+			 Convert.ToBoolean(ConfigurationManager.AppSettings["<#= setting.Key #>"])
 	<# } else { #>
 			 ConfigurationManager.AppSettings["<#= setting.Key #>"]
 	<# } #>);
@@ -130,6 +132,12 @@ public string GetTypeString(object value)
 	{
 		return "int";
     }
+
+	bool b;
+	if (bool.TryParse(value.ToString(), out b))
+	{
+		return "bool";
+	}
 
 	return "string";
 }
