@@ -41,16 +41,8 @@ namespace <#= namespaceName #>
 	var type = GetTypeString(setting.Value);
 	var lazyType = string.Concat("Lazy<", type, ">");
 #>
-		private static readonly <#= lazyType #> _<#= LowerFirst(setting.Key) #> = new <#= lazyType #>(() => 
-	<# if(type == "Guid") { #>
-			 new Guid(ConfigurationManager.AppSettings["<#= setting.Key #>"])
-	<# } else if(type == "int") { #>
-			 Convert.ToInt32(ConfigurationManager.AppSettings["<#= setting.Key #>"])
-	<# } else if(type == "bool") { #>
-			 Convert.ToBoolean(ConfigurationManager.AppSettings["<#= setting.Key #>"])
-	<# } else { #>
-			 ConfigurationManager.AppSettings["<#= setting.Key #>"]
-	<# } #>);
+		private static readonly <#= lazyType #> _<#= LowerFirst(setting.Key) #> = new <#= lazyType #>(() => <# if(type == "Guid") { #>new Guid(GetSetting("<#= setting.Key #>"))<# } else if(type == "int") { #>Convert.ToInt32(GetSetting("<#= setting.Key #>"))<# } else if(type == "bool") { #>Convert.ToBoolean(GetSetting("<#= setting.Key #>"))
+	<# } else { #>GetSetting("<#= setting.Key #>")<# } #>);
 <# } #>
 
 <#  foreach(KeyValueConfigurationElement setting in settings) { #>
@@ -63,6 +55,10 @@ namespace <#= namespaceName #>
 			}
 		}
 <# } #>
+
+	public static string GetSetting(string key)
+	{
+		return ConfigurationManager.AppSettings[key];
 	}
 
 <# if(connectionStrings.Count > 0) { #>
@@ -90,6 +86,7 @@ namespace <#= namespaceName #>
 <# } #>
 	}
 <# } #>
+}
 }
 
 <#+

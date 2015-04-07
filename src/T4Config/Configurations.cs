@@ -13,17 +13,10 @@ namespace T4Config
 
 	public class Configurations : IConfigurations
 	{
-		private static readonly Lazy<string> _key1 = new Lazy<string>(() => 
-				 ConfigurationManager.AppSettings["Key1"]
-	);
-		private static readonly Lazy<Guid> _key2 = new Lazy<Guid>(() => 
-				 new Guid(ConfigurationManager.AppSettings["Key2"])
-	);
-		private static readonly Lazy<int> _key3 = new Lazy<int>(() => 
-				 Convert.ToInt32(ConfigurationManager.AppSettings["Key3"])
-	);
-		private static readonly Lazy<bool> _key4 = new Lazy<bool>(() => 
-				 Convert.ToBoolean(ConfigurationManager.AppSettings["Key4"])
+		private static readonly Lazy<string> _key1 = new Lazy<string>(() => GetSetting("Key1"));
+		private static readonly Lazy<Guid> _key2 = new Lazy<Guid>(() => new Guid(GetSetting("Key2")));
+		private static readonly Lazy<int> _key3 = new Lazy<int>(() => Convert.ToInt32(GetSetting("Key3")));
+		private static readonly Lazy<bool> _key4 = new Lazy<bool>(() => Convert.ToBoolean(GetSetting("Key4"))
 	);
 
 		public virtual string Key1 
@@ -54,6 +47,10 @@ namespace T4Config
 				return _key4.Value;
 			}
 		}
+
+	public static string GetSetting(string key)
+	{
+		return ConfigurationManager.AppSettings[key];
 	}
 
 	public interface IConnectionStrings
@@ -73,5 +70,6 @@ namespace T4Config
 			}
 		}
 	}
+}
 }
 
