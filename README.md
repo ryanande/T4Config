@@ -1,6 +1,6 @@
 # T4Config
 
-A down and dirty way to have strongly typed Config Settings and Connection Strings using in your projects by using T4.
+A down and dirty way to have strongly typed Config Settings and Connection Strings in your projects by using T4.
 
 In a nutshell we create an interface called IConfigurations/ IConnectionStrings, so you can do all your fancy DI/IoC stuff, and a concrete implementation called Configurations/ ConnectionStrings. (both names totally customizable.
 
