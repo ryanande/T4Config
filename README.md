@@ -93,8 +93,7 @@ Can be install from Nuget as well;
 https://www.nuget.org/packages/T4Config/
 
 ## How do I do it?
-- Copy the Configurations.tt file from the src directory to your project.
-- Update the configFile value to the proper config file (web or app).
-- Right click on the file and click "Run Custom Tool".
+- Copy the Configurations.tt file to the src directory to your project (or install via nuget).
+- Right click on the Configurations.tt file and click "Run Custom Tool".
 
 Enjoy!
