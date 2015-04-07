@@ -32,7 +32,7 @@ public class Configurations : IConfigurations
 	private static readonly Lazy<string> _key1 = new Lazy<string>(() => ConfigurationManager.AppSettings["Key1"]);
 	private static readonly Lazy<Guid> _key2 = new Lazy<Guid>(() => new Guid(ConfigurationManager.AppSettings["Key2"]));
 	private static readonly Lazy<int> _key3 = new Lazy<int>(() => Convert.ToInt32(ConfigurationManager.AppSettings["Key3"]));
-	private static readonly Lazy<bool> _key3 = new Lazy<bool>(() => Convert.ToInt32(ConfigurationManager.AppSettings["Key4"]));
+	private static readonly Lazy<bool> _key3 = new Lazy<bool>(() => Convert.ToBoolean(ConfigurationManager.AppSettings["Key4"]));
 
 	public virtual string Key1 
 	{
