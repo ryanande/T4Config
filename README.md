@@ -24,6 +24,7 @@ public interface IConfigurations
 	string Key1 { get; }
 	Guid Key2 { get; }
 	int Key3 { get; }
+	bool Key4 { get; }
 }
 
 public class Configurations : IConfigurations
@@ -31,6 +32,7 @@ public class Configurations : IConfigurations
 	private static readonly Lazy<string> _key1 = new Lazy<string>(() => ConfigurationManager.AppSettings["Key1"]);
 	private static readonly Lazy<Guid> _key2 = new Lazy<Guid>(() => new Guid(ConfigurationManager.AppSettings["Key2"]));
 	private static readonly Lazy<int> _key3 = new Lazy<int>(() => Convert.ToInt32(ConfigurationManager.AppSettings["Key3"]));
+	private static readonly Lazy<bool> _key3 = new Lazy<bool>(() => Convert.ToInt32(ConfigurationManager.AppSettings["Key4"]));
 
 	public virtual string Key1 
 	{
@@ -51,6 +53,13 @@ public class Configurations : IConfigurations
 		get 
 		{
 			return _key3.Value;
+		}
+	}
+	public virtual bool Key4 
+	{
+		get 
+		{
+			return _key4.Value;
 		}
 	}
 }
