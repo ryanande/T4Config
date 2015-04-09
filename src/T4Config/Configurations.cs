@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Configuration;
 
-#pragma warning disable 1591, 3008, 3009
-
 namespace T4Config
 {
 	public interface IConfigurations
@@ -76,6 +74,4 @@ namespace T4Config
 		}
 	}
 }
-
-    #pragma warning restore 1591, 3008, 3009
 
