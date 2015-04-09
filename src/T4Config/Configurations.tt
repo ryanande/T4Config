@@ -25,6 +25,8 @@
 using System;
 using System.Configuration;
 
+#pragma warning disable 1591, 3008, 3009
+
 namespace <#= namespaceName #>
 {
 	public interface IConfigurations
@@ -88,6 +90,8 @@ namespace <#= namespaceName #>
 <# } #>
 }
 }
+
+    #pragma warning restore 1591, 3008, 3009
 
 <#+
 
