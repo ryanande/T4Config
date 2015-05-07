@@ -34,33 +34,33 @@ namespace T4Config
         private static readonly Lazy<bool> _key4 = new Lazy<bool>(() => Convert.ToBoolean(GetSetting("Key4")));
 
 
-        public virtual string Key1 
+        public virtual string Key1
         {
-            get 
+            get
             {
                 return _key1.Value;
             }
         }
 
-        public virtual Guid Key2 
+        public virtual Guid Key2
         {
-            get 
+            get
             {
                 return _key2.Value;
             }
         }
 
-        public virtual int Key3 
+        public virtual int Key3
         {
-            get 
+            get
             {
                 return _key3.Value;
             }
         }
 
-        public virtual bool Key4 
+        public virtual bool Key4
         {
-            get 
+            get
             {
                 return _key4.Value;
             }
@@ -86,9 +86,10 @@ namespace T4Config
     {
         private static readonly Lazy<string> _localSqlServer = new Lazy<string>(() => ConfigurationManager.ConnectionStrings["LocalSqlServer"].ConnectionString);
 
-        public virtual string LocalSqlServer 
+
+        public virtual string LocalSqlServer
         {
-            get 
+            get
             {
                 return _localSqlServer.Value;
             }
@@ -96,4 +97,4 @@ namespace T4Config
     }
 }
 
-    #pragma warning restore 1591, 3008, 3009
+#pragma warning restore 1591, 3008, 3009

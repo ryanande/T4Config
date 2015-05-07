@@ -87,9 +87,10 @@ namespace <#= namespaceName #>
     public class ConnectionStrings : IConnectionStrings
     {
 <#  foreach(ConnectionStringSettings setting in connectionStrings) { #>
-        private static readonly Lazy<string> _<#= LowerFirst(setting.Name) #> = new Lazy<string>(() => ConfigurationManager.ConnectionStrings["<#= setting.Name #>"].ConnectionString);
+        private static readonly Lazy<string> _<#= LowerFirst(setting.Name) #> = new Lazy<string>(() => ConfigurationManager.ConnectionStrings["<#= setting.Name #>"].ConnectionString); 
 
 <# } #><#  foreach(ConnectionStringSettings setting in connectionStrings) { #>
+
         public virtual string <#= setting.Name #> 
         {
             get 
