@@ -66,9 +66,10 @@ namespace <#= namespaceName #>
 
 <# } #>
 
-    public static string GetSetting(string key)
-    {
-        return ConfigurationManager.AppSettings[key];
+        public static string GetSetting(string key)
+        {
+            return ConfigurationManager.AppSettings[key];
+        }
     }
 
 <# if(connectionStrings.Count > 0) { #>
@@ -88,9 +89,7 @@ namespace <#= namespaceName #>
 <#  foreach(ConnectionStringSettings setting in connectionStrings) { #>
         private static readonly Lazy<string> _<#= LowerFirst(setting.Name) #> = new Lazy<string>(() => ConfigurationManager.ConnectionStrings["<#= setting.Name #>"].ConnectionString);
 
-<# } #>
-<#  foreach(ConnectionStringSettings setting in connectionStrings) { #>
-
+<# } #><#  foreach(ConnectionStringSettings setting in connectionStrings) { #>
         public virtual string <#= setting.Name #> 
         {
             get 
@@ -101,7 +100,6 @@ namespace <#= namespaceName #>
 <# } #>
     }
 <# } #>
-}
 }
 
     #pragma warning restore 1591, 3008, 3009

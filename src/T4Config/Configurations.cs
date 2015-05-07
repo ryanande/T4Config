@@ -67,9 +67,10 @@ namespace T4Config
         }
 
 
-    public static string GetSetting(string key)
-    {
-        return ConfigurationManager.AppSettings[key];
+        public static string GetSetting(string key)
+        {
+            return ConfigurationManager.AppSettings[key];
+        }
     }
 
     [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1201:ElementsMustAppearInTheCorrectOrder", Justification = "Reviewed.")]
@@ -85,7 +86,6 @@ namespace T4Config
     {
         private static readonly Lazy<string> _localSqlServer = new Lazy<string>(() => ConfigurationManager.ConnectionStrings["LocalSqlServer"].ConnectionString);
 
-
         public virtual string LocalSqlServer 
         {
             get 
@@ -94,7 +94,6 @@ namespace T4Config
             }
         }
     }
-}
 }
 
     #pragma warning restore 1591, 3008, 3009
