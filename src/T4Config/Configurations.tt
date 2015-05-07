@@ -22,79 +22,90 @@
 	KeyValueConfigurationElement[] settings = GetSettings();	
 	ConnectionStringSettingsCollection connectionStrings = GetConnectionStrings();
 #>
-using System;
-using System.Configuration;
 
 #pragma warning disable 1591, 3008, 3009
 
 namespace <#= namespaceName #>
 {
-	public interface IConfigurations
-	{
-<#  foreach(KeyValueConfigurationElement setting in settings) { #>
-		<#= GetTypeString(setting.Value) #> <#= setting.Key #> { get; }
-<# } #>
-	}
+    using System;
+    using System.Configuration;
+    using System.Diagnostics.CodeAnalysis;
 
-	public class Configurations : IConfigurations
-	{
+    [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1201:ElementsMustAppearInTheCorrectOrder", Justification = "Reviewed.")]
+    public interface IConfigurations
+    {
+<#  foreach(KeyValueConfigurationElement setting in settings) { #>
+        <#= GetTypeString(setting.Value) #> <#= setting.Key #> { get; }
+
+<# } #>
+    }
+
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1309:FieldNamesMustNotBeginWithUnderscore", Justification = "Reviewed.")]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1311:StaticReadonlyFieldsMustBeginWithUpperCaseLetter", Justification = "Reviewed.")]
+    public class Configurations : IConfigurations
+    {
 <#  foreach(KeyValueConfigurationElement setting in settings) { #>
 <#
 	var type = GetTypeString(setting.Value);
 	var lazyType = string.Concat("Lazy<", type, ">");
 #>
-		private static readonly <#= lazyType #> _<#= LowerFirst(setting.Key) #> = new <#= lazyType #>(() => <# if(type == "Guid") { #>new Guid(GetSetting("<#= setting.Key #>"))<# } else if(type == "int") { #>Convert.ToInt32(GetSetting("<#= setting.Key #>"))<# } else if(type == "bool") { #>Convert.ToBoolean(GetSetting("<#= setting.Key #>"))
-	<# } else { #>GetSetting("<#= setting.Key #>")<# } #>);
+        private static readonly <#= lazyType #> _<#= LowerFirst(setting.Key) #> = new <#= lazyType #>(() => <# if(type == "Guid") { #>new Guid(GetSetting("<#= setting.Key #>"))<# } else if(type == "int") { #>Convert.ToInt32(GetSetting("<#= setting.Key #>"))<# } else if(type == "bool") { #>Convert.ToBoolean(GetSetting("<#= setting.Key #>"))<# } else { #>GetSetting("<#= setting.Key #>")<# } #>);
+
 <# } #>
 
 <#  foreach(KeyValueConfigurationElement setting in settings) { #>
 <#  var type = GetTypeString(setting.Value); #>
-		public virtual <#= type #> <#= setting.Key #> 
-		{
-			get 
-			{
-				return _<#= LowerFirst(setting.Key) #>.Value;
-			}
-		}
+        public virtual <#= type #> <#= setting.Key #> 
+        {
+            get 
+            {
+                return _<#= LowerFirst(setting.Key) #>.Value;
+            }
+        }
+
 <# } #>
 
-	public static string GetSetting(string key)
-	{
-		return ConfigurationManager.AppSettings[key];
-	}
+    public static string GetSetting(string key)
+    {
+        return ConfigurationManager.AppSettings[key];
+    }
 
 <# if(connectionStrings.Count > 0) { #>
-	public interface IConnectionStrings
-	{
-<#  foreach(ConnectionStringSettings  setting in connectionStrings) { #>
-		string <#= setting.Name #> { get; }
-<# } #>
-	}
+    [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1201:ElementsMustAppearInTheCorrectOrder", Justification = "Reviewed.")]
+    public interface IConnectionStrings
+    {<#  foreach(ConnectionStringSettings  setting in connectionStrings) { #>
 
-	public class ConnectionStrings : IConnectionStrings
-	{
-<#  foreach(ConnectionStringSettings setting in connectionStrings) { #>
-		private static readonly Lazy<string> _<#= LowerFirst(setting.Name) #> = new Lazy<string>(() => ConfigurationManager.ConnectionStrings["<#= setting.Name #>"].ConnectionString);
+        string <#= setting.Name #> { get; }
 <# } #>
+    }
 
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1309:FieldNamesMustNotBeginWithUnderscore", Justification = "Reviewed.")]
+    [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1311:StaticReadonlyFieldsMustBeginWithUpperCaseLetter", Justification = "Reviewed.")]
+    public class ConnectionStrings : IConnectionStrings
+    {
 <#  foreach(ConnectionStringSettings setting in connectionStrings) { #>
-		public virtual string <#= setting.Name #> 
-		{
-			get 
-			{
-				return _<#= LowerFirst(setting.Name) #>.Value;
-			}
-		}
+        private static readonly Lazy<string> _<#= LowerFirst(setting.Name) #> = new Lazy<string>(() => ConfigurationManager.ConnectionStrings["<#= setting.Name #>"].ConnectionString);
+
 <# } #>
-	}
+<#  foreach(ConnectionStringSettings setting in connectionStrings) { #>
+
+        public virtual string <#= setting.Name #> 
+        {
+            get 
+            {
+                return _<#= LowerFirst(setting.Name) #>.Value;
+            }
+        }
+<# } #>
+    }
 <# } #>
 }
 }
 
     #pragma warning restore 1591, 3008, 3009
-
 <#+
-
 public KeyValueConfigurationElement[] GetSettings()
 {
 	return GetConfiguration().AppSettings.Settings.Cast<KeyValueConfigurationElement>()
