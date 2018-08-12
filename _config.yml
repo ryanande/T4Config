@@ -1,0 +1,8 @@
+title: T4config
+description: Strongly Typed, Auto-generated!
+google_analytics: UA-60207134-1
+show_downloads: true
+theme: jekyll-theme-minimal
+
+gems:
+  - jekyll-mentions
