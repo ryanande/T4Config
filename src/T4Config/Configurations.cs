@@ -11,7 +11,6 @@ namespace T4Config
 {
     using System;
     using System.Configuration;
-    using System.Diagnostics.CodeAnalysis;
 
     public interface IConfigurations
     {
