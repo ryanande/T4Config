@@ -5,7 +5,7 @@ var _target = Argument("target", "Default");
 // Variables
 
 var _configuration = Argument("configuration", "Release");
-var _version = "1.0.5";
+var _version = "1.0.5.1";
 var _project = "T4Config";
 
 var _srcDir = "./src/";
@@ -69,6 +69,7 @@ Task("pack")
             ProjectUrl              = new Uri("https://github.com/ryanande/T4Config"),
             Copyright               = "Buzzuti 2019",
             Tags                    = new [] {"T4", "Configuration", "appsettings", "connectionString", "Build"},
+            LicenseUrl              = new Uri("https://github.com/ryanande/T4Config/blob/master/LICENSE.md"),
             RequireLicenseAcceptance= false,
             Symbols                 = false,
             NoPackageAnalysis       = true,
