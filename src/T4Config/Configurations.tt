@@ -35,7 +35,6 @@ namespace <#= namespaceName #>
 {
     using System;
     using System.Configuration;
-    using System.Diagnostics.CodeAnalysis;
 
     public interface IConfigurations
     {
@@ -58,14 +57,7 @@ namespace <#= namespaceName #>
 
 <#  foreach(KeyValueConfigurationElement setting in settings) { #>
 <#  var type = GetTypeString(setting.Value); #>
-        public virtual <#= type #> <#= setting.Key #> 
-        {
-            get 
-            {
-                return _<#= LowerFirst(setting.Key) #>.Value;
-            }
-        }
-
+		public virtual <#= type #> <#= setting.Key #>  { get; } = _<#= LowerFirst(setting.Key) #>.Value;
 <# } #>
 
         public static string GetSetting(string key)
@@ -88,14 +80,7 @@ namespace <#= namespaceName #>
         private static readonly Lazy<string> _<#= LowerFirst(setting.Name) #> = new Lazy<string>(() => ConfigurationManager.ConnectionStrings["<#= setting.Name #>"].ConnectionString); 
 
 <# } #><#  foreach(ConnectionStringSettings setting in connectionStrings) { #>
-
-        public virtual string <#= setting.Name #> 
-        {
-            get 
-            {
-                return _<#= LowerFirst(setting.Name) #>.Value;
-            }
-        }
+		public virtual string <#= setting.Name #> { get; } = _<#= LowerFirst(setting.Name) #>.Value;
 <# } #>
     }
 <# } #>

@@ -11,7 +11,6 @@ namespace T4Config
 {
     using System;
     using System.Configuration;
-    using System.Diagnostics.CodeAnalysis;
 
     public interface IConfigurations
     {
@@ -36,38 +35,10 @@ namespace T4Config
         private static readonly Lazy<bool> _key4 = new Lazy<bool>(() => Convert.ToBoolean(GetSetting("Key4")));
 
 
-        public virtual string Key1 
-        {
-            get 
-            {
-                return _key1.Value;
-            }
-        }
-
-        public virtual Guid Key2 
-        {
-            get 
-            {
-                return _key2.Value;
-            }
-        }
-
-        public virtual int Key3 
-        {
-            get 
-            {
-                return _key3.Value;
-            }
-        }
-
-        public virtual bool Key4 
-        {
-            get 
-            {
-                return _key4.Value;
-            }
-        }
-
+		public virtual string Key1  { get; } = _key1.Value;
+		public virtual Guid Key2  { get; } = _key2.Value;
+		public virtual int Key3  { get; } = _key3.Value;
+		public virtual bool Key4  { get; } = _key4.Value;
 
         public static string GetSetting(string key)
         {
@@ -84,13 +55,6 @@ namespace T4Config
     {
         private static readonly Lazy<string> _localSqlServer = new Lazy<string>(() => ConfigurationManager.ConnectionStrings["LocalSqlServer"].ConnectionString); 
 
-
-        public virtual string LocalSqlServer 
-        {
-            get 
-            {
-                return _localSqlServer.Value;
-            }
-        }
+		public virtual string LocalSqlServer { get; } = _localSqlServer.Value;
     }
 }
