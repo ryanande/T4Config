@@ -182,3 +182,5 @@ $RECYCLE.BIN/
 **/*.sln.ide
 
 src/.vs/
+
+tools/
