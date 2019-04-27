@@ -69,6 +69,7 @@ Task("pack")
             ProjectUrl              = new Uri("https://github.com/ryanande/T4Config"),
             Copyright               = "Buzzuti 2019",
             Tags                    = new [] {"T4", "Configuration", "appsettings", "connectionString", "Build"},
+            LicenseUrl              = new Uri("https://github.com/ryanande/T4Config/blob/master/LICENSE.md"),
             RequireLicenseAcceptance= false,
             Symbols                 = false,
             NoPackageAnalysis       = true,
