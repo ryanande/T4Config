@@ -5,7 +5,7 @@ var _target = Argument("target", "Default");
 // Variables
 
 var _configuration = Argument("configuration", "Release");
-var _version = "1.0.5";
+var _version = "1.0.5.1";
 var _project = "T4Config";
 
 var _srcDir = "./src/";
